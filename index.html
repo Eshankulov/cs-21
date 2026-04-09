@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Прогноз зарплаты</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      font-family: sans-serif;
+      background: linear-gradient(270deg,#667eea,#764ba2,#00c6ff);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      min-height:100vh;
+      color:white;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.15);
+      padding:30px;
+      border-radius:20px;
+      width:350px;
+      text-align:center;
+    }
+
+    input, button {
+      width:100%;
+      padding:10px;
+      margin-top:10px;
+      border:none;
+      border-radius:10px;
+    }
+
+    button {
+      background:#0072ff;
+      color:white;
+      cursor:pointer;
+    }
+
+    .result {
+      margin-top:15px;
+      font-size:18px;
+      font-weight:bold;
+    }
+
+    canvas {
+      margin-top:15px;
+      background:white;
+      border-radius:10px;
+    }
+
+    table {
+      width:100%;
+      margin-top:15px;
+      font-size:12px;
+      color:white;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="card">
+  <h2>🤖 AI Salary (Demo)</h2>
+
+  <input type="number" id="exp" placeholder="Experience (years)">
+  <button onclick="predict()">Calculate</button>
+
+  <div class="result" id="result"></div>
+
+  <canvas id="chart"></canvas>
+
+  <table>
+    <tr><th>Exp</th><th>Salary</th></tr>
+    <tr><td>1.1</td><td>39343</td></tr>
+    <tr><td>5.1</td><td>66029</td></tr>
+    <tr><td>10.5</td><td>121872</td></tr>
+  </table>
+</div>
+
+<script>
+let chart;
+
+function predict() {
+  let exp = parseFloat(document.getElementById("exp").value);
+
+  if (!exp) return;
+
+  let salary = 25000 + exp * 9500;
+
+  document.getElementById("result").innerText =
+    "💰 " + salary.toFixed(2) + " $";
+
+  drawChart(exp, salary);
+}
+
+function drawChart(exp, salary) {
+  const ctx = document.getElementById('chart').getContext('2d');
+
+  if (chart) {
+    chart.destroy();
+  }
+
+  chart = new Chart(ctx, {
+    type: 'scatter',
+    data: {
+      datasets: [
+        {
+          label: 'Рост зарплаты',
+          data: [
+            {x: 0, y: 25000},
+            {x: 10, y: 120000}
+          ],
+          type: 'line',
+          tension: 0.3
+        },
+        {
+          label: 'Ваш результат',
+          data: [{x: exp, y: salary}]
+        }
+      ]
+    },
+    options: {
+      scales: {
+        x: {
+          title: { display: true, text: 'Experience' }
+        },
+        y: {
+          title: { display: true, text: 'Salary' }
+        }
+      }
+    }
+  });
+}
+</script>
+
+</body>
+</html>
